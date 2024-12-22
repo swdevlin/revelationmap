@@ -1,4 +1,12 @@
+# rust project
 rust/target
 rust/logs
 rust/.env
 rust/.idea
+
+# nodejs project
+nodejs/db/knexfile.js
+nodejs/.env
+nodejs/node_modules/
+nodejs/.idea/
+nodejs/logs/
