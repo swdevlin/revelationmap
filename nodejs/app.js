@@ -22,7 +22,6 @@ const logger = winston.createLogger({
   ]
 });
 
-// Middleware to parse JSON
 app.use(express.json());
 
 app.use(morgan('tiny', { stream: { write: (message) => logger.info(message.trim()) } }));
@@ -37,7 +36,6 @@ app.use((req, res, next) => {
 
   logger.info(`Received ${req.method} request for ${req.originalUrl}`);
 
-  // Listen for the response finish event to log the time taken
   res.on('finish', () => {
     const endTime = Date.now();
     const timeTaken = endTime - startTime;
@@ -49,7 +47,6 @@ app.use((req, res, next) => {
   next();
 });
 
-// Start the server
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
