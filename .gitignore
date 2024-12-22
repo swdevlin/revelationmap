@@ -1,2 +1,4 @@
 rust/target
 rust/logs
+rust/.env
+rust/.idea
