@@ -1,3 +1,4 @@
+use crate::hex_address::SectorRegion;
 use crate::hex_address::{HexAddress, MapRegion};
 use crate::hexrange::map_region_to_sector_regions;
 use crate::solarsystem::{SolarSystem, SolarSystemStars};
@@ -72,8 +73,7 @@ pub async fn systemmap(address: web::Query<HexAddress>, data: web::Data<AppState
 }
 
 
-fn add_where_clauses(builder: &mut sqlx::QueryBuilder<Postgres>, params: &MapRegion) {
-    let mapped_sectors = map_region_to_sector_regions(params);
+fn add_where_clauses(builder: &mut sqlx::QueryBuilder<Postgres>, mapped_sectors: &Vec<SectorRegion>) {
     let mut joiner = "";
     for sector in mapped_sectors {
         builder.push(joiner);
@@ -120,7 +120,12 @@ pub async fn solarsystems(params: MapRegion, data: web::Data<AppState>,  _req: H
     let mut builder: sqlx::QueryBuilder<Postgres> = sqlx::QueryBuilder::new("SELECT solar_system.*, sector.x as sector_x, sector.y as sector_y, sector.name as sector_name FROM solar_system ");
     builder.push("join sector on sector.id = solar_system.sector_id ");
     builder.push("where ");
-    add_where_clauses(&mut builder, &params);
+    let mapped_sectors = map_region_to_sector_regions(&params);
+    if mapped_sectors.is_empty() {
+        return HttpResponse::BadRequest().finish();
+    }
+
+    add_where_clauses(&mut builder, &mapped_sectors);
     let query = builder.build_query_as::<SolarSystem>();
     match fetch_rows(query, &data.db).await {
         Ok(systems) => HttpResponse::Ok().json(systems),
@@ -130,24 +135,29 @@ pub async fn solarsystems(params: MapRegion, data: web::Data<AppState>,  _req: H
 
 #[get("/stars")]
 pub async fn stars(params: MapRegion, data: web::Data<AppState>,  _req: HttpRequest) -> impl Responder {
-    let mut builder: sqlx::QueryBuilder<Postgres> = sqlx::QueryBuilder::new("SELECT \
-      solar_system.name, \
-      solar_system.x, \
-      solar_system.y, \
-      solar_system.scan_points, \
-      solar_system.survey_index, \
-      solar_system.gas_giant_count, \
-      solar_system.terrestrial_planet_count, \
-      solar_system.planetoid_belt_count, \
-      solar_system.stars, \
-      solar_system.allegiance, \
-      sector.x as sector_x, \
-      sector.y as sector_y, \
-      sector.name as sector_name \
-      FROM solar_system \
-      join sector on sector.id = solar_system.sector_id \
+    let mut builder: sqlx::QueryBuilder<Postgres> = sqlx::QueryBuilder::new("SELECT
+      solar_system.name,
+      solar_system.x,
+      solar_system.y,
+      solar_system.scan_points,
+      solar_system.survey_index,
+      solar_system.gas_giant_count,
+      solar_system.terrestrial_planet_count,
+      solar_system.planetoid_belt_count,
+      solar_system.stars,
+      solar_system.allegiance,
+      sector.x as sector_x,
+      sector.y as sector_y,
+      sector.name as sector_name
+      FROM solar_system
+      join sector on sector.id = solar_system.sector_id
       where ");
-    add_where_clauses(&mut builder, &params);
+    let mapped_sectors = map_region_to_sector_regions(&params);
+    if mapped_sectors.is_empty() {
+        return HttpResponse::BadRequest().finish();
+    }
+
+    add_where_clauses(&mut builder, &mapped_sectors);
     let query = builder.build_query_as::<SolarSystemStars>();
     match fetch_rows(query, &data.db).await {
         Ok(systems) => HttpResponse::Ok().json(systems),
