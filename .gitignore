@@ -1,3 +1,5 @@
+# See https://help.github.com/articles/ignoring-files for more about ignoring files.
+
 # rust project
 rust/target
 rust/logs
@@ -10,3 +12,32 @@ nodejs/.env
 nodejs/node_modules/
 nodejs/.idea/
 nodejs/logs/
+
+# ruby project
+#
+# Ignore bundler config.
+ruby/.bundle
+
+# Ignore all environment files.
+ruby/.env*
+
+# Ignore all logfiles and tempfiles.
+ruby/log/*
+ruby/tmp/*
+ruby/!/log/.keep
+ruby/!/tmp/.keep
+
+# Ignore pidfiles, but keep the directory.
+ruby/tmp/pids/*
+ruby/!/tmp/pids/
+ruby/!/tmp/pids/.keep
+
+# Ignore storage (uploaded files in development and any SQLite databases).
+ruby/storage/*
+ruby/!/storage/.keep
+ruby/tmp/storage/*
+ruby/!/tmp/storage/
+ruby/!/tmp/storage/.keep
+
+# Ignore master key for decrypting credentials and more.
+ruby/config/master.key
