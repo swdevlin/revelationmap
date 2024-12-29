@@ -14,4 +14,6 @@ Rails.application.routes.draw do
   resources :stars, only: [:index]
 
   get '/systemmap', to: 'system_map#show'
+
+  get '/solarsystem', to: 'solar_system#show'
 end
