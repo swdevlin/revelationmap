@@ -29,6 +29,7 @@ app.use(morgan('tiny', { stream: { write: (message) => logger.info(message.trim(
 app.use('/systemmap', require('./routes/systemmap'));
 app.use('/sectors', require('./routes/sectors'));
 app.use('/solarsystems', require('./routes/solarsystems'));
+app.use('/solarsystem', require('./routes/solarsystem'));
 app.use('/stars', require('./routes/stars'));
 
 app.use((req, res, next) => {

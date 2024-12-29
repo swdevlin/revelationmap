@@ -125,4 +125,25 @@ const parseQueryParams = (req, res, next) => {
     }
 };
 
-module.exports = { sectorSelections, addClauses, parseQueryParams };
+const parseHexAddress = (req, res, next) => {
+    try {
+        const { sx, sy, hx, hy } = req.query;
+
+        if (sx === undefined || sy === undefined || hx === undefined || hy === undefined) {
+            return res.status(400).json({ error: 'sx, sy, hx, hy required' });
+        }
+
+        req.address = {
+            sx: +sx,
+            sy: +sy,
+            hx: +hx,
+            hy: +hy
+        };
+        next();
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'invalid hex address' });
+    }
+};
+
+module.exports = { sectorSelections, addClauses, parseQueryParams, parseHexAddress };
