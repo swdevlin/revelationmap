@@ -2,9 +2,8 @@ mod model;
 mod handlers;
 mod hexrange;
 mod hex_address;
-mod solarsystem;
 
-use crate::handlers::{sectors, solarsystems, systemmap, stars};
+use crate::handlers::{sectors, solarsystems, systemmap, stars, solarsystem};
 use actix_cors::Cors;
 use actix_web::http::header;
 use actix_web::middleware::Logger;
@@ -62,6 +61,7 @@ async fn main() -> std::io::Result<()> {
             .service(systemmap)
             .service(solarsystems)
             .service(stars)
+            .service(solarsystem)
             .wrap(cors)
             .wrap(Logger::default())
     })

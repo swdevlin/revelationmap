@@ -1,9 +1,7 @@
 use crate::hex_address::SectorRegion;
 use crate::hex_address::{HexAddress, MapRegion};
 use crate::hexrange::map_region_to_sector_regions;
-use crate::solarsystem::{SolarSystem, SolarSystemStars};
 use crate::{
-    model::Sector,
     AppState,
 };
 use actix_files::NamedFile;
@@ -12,6 +10,7 @@ use futures_util::StreamExt;
 use serde_json::json;
 use sqlx::Postgres;
 use std::path::PathBuf;
+use crate::model::{Sector, SolarSystem, SolarSystemStars};
 
 #[get("/sectors")]
 pub async fn sectors(data: web::Data<AppState>) -> impl Responder {
@@ -129,7 +128,10 @@ pub async fn solarsystems(params: MapRegion, data: web::Data<AppState>,  _req: H
     let query = builder.build_query_as::<SolarSystem>();
     match fetch_rows(query, &data.db).await {
         Ok(systems) => HttpResponse::Ok().json(systems),
-        Err(response) => response,
+        Err(err) => {
+            eprintln!("Error fetching solarsystems: {:?}", err);
+            HttpResponse::BadRequest().body("Error fetching system")
+        }
     }
 }
 
@@ -161,6 +163,38 @@ pub async fn stars(params: MapRegion, data: web::Data<AppState>,  _req: HttpRequ
     let query = builder.build_query_as::<SolarSystemStars>();
     match fetch_rows(query, &data.db).await {
         Ok(systems) => HttpResponse::Ok().json(systems),
-        Err(response) => response,
+        Err(err) => {
+            eprintln!("Error fetching stars: {:?}", err);
+            HttpResponse::BadRequest().body("Error fetching system")
+        }
     }
 }
+
+#[get("/solarsystem")]
+pub async fn solarsystem(address: web::Query<HexAddress>, data: web::Data<AppState>,  _req: HttpRequest) -> impl Responder {
+    let mut builder: sqlx::QueryBuilder<Postgres> = sqlx::QueryBuilder::new("SELECT solar_system.*, sector.x as sector_x, sector.y as sector_y, sector.name as sector_name FROM solar_system ");
+    builder.push("join sector on sector.id = solar_system.sector_id ");
+    builder.push("where ");
+    builder.push("sector.x = ");
+    builder.push_bind(address.sx);
+    builder.push(" and sector.y = ");
+    builder.push_bind(address.sy);
+    builder.push(" and solar_system.x =");
+    builder.push_bind(address.hx);
+    builder.push(" and solar_system.y =");
+    builder.push_bind(address.hy);
+
+    let query = builder.build_query_as::<SolarSystem>();
+
+    match query.fetch_one(&data.db).await {
+        Ok(solar_system) => {
+            let as_json = serde_json::json!(solar_system);
+            HttpResponse::Ok().json(as_json)
+        },
+        Err(err) => {
+            eprintln!("Error fetching system: {:?}", err);
+            HttpResponse::BadRequest().body("Error fetching system")
+        }
+    }
+}
+
