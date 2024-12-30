@@ -42,3 +42,6 @@ ruby/!/tmp/storage/.keep
 # Ignore master key for decrypting credentials and more.
 ruby/config/master.key
 ruby/.idea/
+
+python/venv/
+python/django_revelation/revelationmap/settings.py
