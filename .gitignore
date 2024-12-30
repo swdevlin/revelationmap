@@ -1,5 +1,7 @@
 # See https://help.github.com/articles/ignoring-files for more about ignoring files.
 
+**/.idea/
+
 # rust project
 rust/target
 rust/logs
@@ -43,5 +45,6 @@ ruby/!/tmp/storage/.keep
 ruby/config/master.key
 ruby/.idea/
 
+python/venv/
 python/venv/
 python/django_revelation/revelationmap/settings.py
