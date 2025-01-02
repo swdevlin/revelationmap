@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import SolarSystem, Sector
+from .models import SolarSystem, Sector, Route
 
 
 class SolarSystemSerializer(serializers.ModelSerializer):
@@ -46,4 +46,10 @@ class SolarSystemStarsSerializer(serializers.ModelSerializer):
 class SectorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Sector
+        fields = '__all__'
+
+
+class RouteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Route
         fields = '__all__'
