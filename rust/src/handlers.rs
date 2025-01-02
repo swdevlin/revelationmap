@@ -10,7 +10,7 @@ use futures_util::StreamExt;
 use serde_json::json;
 use sqlx::Postgres;
 use std::path::PathBuf;
-use crate::model::{Sector, SolarSystem, SolarSystemStars};
+use crate::model::{Route, Sector, SolarSystem, SolarSystemStars};
 
 #[get("/sectors")]
 pub async fn sectors(data: web::Data<AppState>) -> impl Responder {
@@ -198,3 +198,26 @@ pub async fn solarsystem(address: web::Query<HexAddress>, data: web::Data<AppSta
     }
 }
 
+#[get("/route")]
+pub async fn route(data: web::Data<AppState>) -> impl Responder {
+
+    let query_result = sqlx::query_as!(
+        Route,
+        "SELECT * from route ORDER by year, day, ship_id"
+    )
+        .fetch_all(&data.db)
+        .await;
+
+    if query_result.is_err() {
+        let message = "Something bad happened while fetching ship routes";
+        return HttpResponse::InternalServerError()
+            .json(json!({"message": message}));
+    }
+
+    let hexes = query_result.unwrap();
+
+    let json_response = serde_json::json!([
+        hexes
+    ]);
+    HttpResponse::Ok().json(json_response)
+}

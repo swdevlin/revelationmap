@@ -51,3 +51,16 @@ pub struct SolarSystemStars {
     pub stars: Value,
     pub allegiance: Option<String>,
 }
+
+#[derive(Debug, FromRow, Deserialize, Serialize)]
+pub struct Route {
+    pub id: i32,
+    pub year: i32,
+    pub day: i32,
+    pub ship_id: i32,
+    pub sector_x: i32,
+    pub sector_y: i32,
+    pub hex_x: i32,
+    pub hex_y: i32,
+}
+
