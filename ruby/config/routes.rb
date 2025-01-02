@@ -9,6 +9,8 @@ Rails.application.routes.draw do
   # root "posts#index"
   resources :sectors, only: [:index]
 
+  resources :route, only: [:index]
+
   resources :solarsystems, only: [:index], controller: 'solar_systems'
 
   resources :stars, only: [:index]
