@@ -15,6 +15,7 @@ router.get('/', parseQueryParams, async (req, res) => {
                 'solar_system.y',
                 'sector.x as sector_x',
                 'sector.y as sector_y',
+                'sector.name as sector_name',
                 'solar_system.scan_points',
                 'solar_system.survey_index',
                 'solar_system.gas_giant_count',

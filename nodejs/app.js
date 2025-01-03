@@ -31,6 +31,7 @@ app.use('/sectors', require('./routes/sectors'));
 app.use('/solarsystems', require('./routes/solarsystems'));
 app.use('/solarsystem', require('./routes/solarsystem'));
 app.use('/stars', require('./routes/stars'));
+app.use('/route', require('./routes/route'));
 
 app.use((req, res, next) => {
   const startTime = Date.now();
