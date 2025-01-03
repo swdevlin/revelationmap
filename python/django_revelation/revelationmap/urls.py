@@ -17,6 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+from django_revelation.revelationmap.views.route import RouteView
 from django_revelation.revelationmap.views.sectors import SectorsView
 from django_revelation.revelationmap.views.solarsystem import SolarSystemDetailView
 from django_revelation.revelationmap.views.solarsystems import SolarSystemsView
@@ -25,9 +26,10 @@ from django_revelation.revelationmap.views.system_map import system_map
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('route', RouteView.as_view(), name='route'),
     path('sectors', SectorsView.as_view(), name='sectors'),
     path('solarsystem', SolarSystemDetailView.as_view(), name='solarsystem'),
-    path('stars', StarsView.as_view(), name='stars'),
     path('solarsystems', SolarSystemsView.as_view(), name='solarsystems'),
+    path('stars', StarsView.as_view(), name='stars'),
     path('systemmap', system_map, name='systemmap'),
 ]
