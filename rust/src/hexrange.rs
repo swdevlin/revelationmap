@@ -92,7 +92,7 @@ pub fn map_region_to_sector_regions(map_region: &MapRegion) -> Vec<SectorRegion>
             };
 
             let (min_y, max_y) = if y == ul.sy {
-                (ul.hy, if x == lr.sx { lr.hy } else { 40 })
+                (ul.hy, if y == lr.sy { lr.hy } else { 40 })
             } else if y < ul.sy && y > lr.sy {
                 (1, 40)
             } else {

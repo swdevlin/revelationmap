@@ -34,12 +34,12 @@ const sectorSelections = (ul, lr) => {
                         maxX = 32;
                     } else {
                         minX = 1;
-                        maxX = lr.sx;
+                        maxX = lr.hx;
                     }
 
                     if (y === ul.sy) {
                         minY = ul.hy;
-                        if (x === lr.sx)
+                        if (y === lr.sy)
                             maxY = lr.hy;
                         else
                             maxY = 40;
