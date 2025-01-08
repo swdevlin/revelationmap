@@ -29,7 +29,7 @@ pub struct SolarSystem {
     pub native_sophont: bool,
     pub extinct_sophont: bool,
     pub star_count: i32,
-    pub main_world: Value,
+    pub main_world: Option<Value>,
     pub primary_star: Value,
     pub stars: Value,
     pub allegiance: Option<String>,
