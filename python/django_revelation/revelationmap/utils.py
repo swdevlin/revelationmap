@@ -101,7 +101,7 @@ def sector_regions(ul, lr=None):
 
 					if y == ul.sy:
 						minY = ul.hy
-						maxY = lr.hy if x == lr.sx else 40
+						maxY = lr.hy if y == lr.sy else 40
 					elif ul.sy > y > lr.sy:
 						minY = 1
 						maxY = 40
