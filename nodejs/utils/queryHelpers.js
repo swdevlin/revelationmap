@@ -65,57 +65,42 @@ const sectorSelections = (ul, lr) => {
     return regions;
 }
 
-const addClauses = (query, clauses) => {
+const addClauses = (query, req) => {
     query.where(function() {
         this
-            .where('sector.x', clauses[0].sx)
-            .andWhere('sector.y', clauses[0].sy)
-            .andWhereBetween('solar_system.x', [clauses[0].minX, clauses[0].maxX])
-            .andWhereBetween('solar_system.y', [clauses[0].minY, clauses[0].maxY])
-        ;
+          .whereBetween('solar_system.origin_x', [req.ul.x, req.lr.x])
+          .andWhereBetween('solar_system.origin_y', [req.lr.y, req.ul.y]);
     });
-
-    for (let i = 1; i < clauses.length; i++) {
-        query.orWhere(function() {
-            this
-                .where('sector.x', clauses[i].sx)
-                .andWhere('sector.y', clauses[i].sy)
-                .andWhereBetween('solar_system.x', [clauses[i].minX, clauses[i].maxX])
-                .andWhereBetween('solar_system.y', [clauses[i].minY, clauses[i].maxY])
-            ;
-        });
-    }
 }
 
 const parseQueryParams = (req, res, next) => {
     try {
-        const { ulsx, ulsy, ulhx, ulhy, lrsx, lrsy, lrhx, lrhy } = req.query;
+        let { ulsx, ulsy, ulx, uly, lrx, lry } = req.query;
 
         if (ulsx === undefined || ulsy === undefined) {
             return res.status(400).json({ error: 'At least upper left sector x and y required' });
         }
 
-        if (lrsx !== undefined && lrsy !== undefined) {
-            if (
-                ulhx === undefined || ulhy === undefined ||
-                lrhx === undefined || lrhy === undefined ||
-                +ulsx > +lrsx || +ulsy < +lrsy
-            ) {
+        if (ulsx !== undefined && ulsy !== undefined) {
+            ulx = ulsx * 32 + 1;
+            uly = ulsy * 40 - 1;
+            lrx = ulsx * 32 + 32;
+            lry = ulsy * 40 - 40;
+        } else if (
+                ulx === undefined || uly === undefined ||
+                lrx === undefined || lry === undefined ||
+          ulx > lrx || uly < lry
+        ) {
                 return res.status(400).json({ error: 'hex Xs and Ys incorrect' });
-            }
         }
         req.ul = {
-            sx: +ulsx,
-            sy: +ulsy,
-            hx: +ulhx,
-            hy: +ulhy
+            x: +ulx,
+            y: +uly
         };
 
         req.lr = {
-            sx: +lrsx,
-            sy: +lrsy,
-            hx: +lrhx,
-            hy: +lrhy
+            x: +lrx,
+            y: +lry
         };
 
         next();
