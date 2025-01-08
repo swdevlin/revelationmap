@@ -94,7 +94,7 @@ class BaseSolarSystemController < ApplicationController
 
           if y == ul[:sy]
             minY = ul[:hy]
-            maxY = (x == lr[:sx] ? lr[:hy] : 40)
+            maxY = (y == lr[:sy] ? lr[:hy] : 40)
           elsif y < ul[:sy] && y > lr[:sy]
             minY = 1
             maxY = 40
