@@ -75,21 +75,17 @@ const addClauses = (query, req) => {
 
 const parseQueryParams = (req, res, next) => {
     try {
-        let { ulsx, ulsy, ulx, uly, lrx, lry } = req.query;
+        let { sx, sy, ulx, uly, lrx, lry } = req.query;
 
-        if (ulsx === undefined || ulsy === undefined) {
-            return res.status(400).json({ error: 'At least upper left sector x and y required' });
-        }
-
-        if (ulsx !== undefined && ulsy !== undefined) {
-            ulx = ulsx * 32 + 1;
-            uly = ulsy * 40 - 1;
-            lrx = ulsx * 32 + 32;
-            lry = ulsy * 40 - 40;
+        if (sx !== undefined && sy !== undefined) {
+            ulx = sx * 32 + 1;
+            uly = sy * 40 - 1;
+            lrx = ulx + 31;
+            lry = uly - 39;
         } else if (
                 ulx === undefined || uly === undefined ||
                 lrx === undefined || lry === undefined ||
-          ulx > lrx || uly < lry
+          +ulx > +lrx || +uly < +lry
         ) {
                 return res.status(400).json({ error: 'hex Xs and Ys incorrect' });
         }
