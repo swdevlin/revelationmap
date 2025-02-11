@@ -9,7 +9,7 @@ Rails.application.routes.draw do
   # root "posts#index"
   resources :sectors, only: [:index]
 
-  resources :route, only: [:index]
+  resources :route, only: [:index, :create]
 
   resources :solarsystems, only: [:index], controller: 'solar_systems'
 
@@ -18,4 +18,6 @@ Rails.application.routes.draw do
   get '/systemmap', to: 'system_map#show'
 
   get '/solarsystem', to: 'solar_system#show'
+
+  resources :route
 end
