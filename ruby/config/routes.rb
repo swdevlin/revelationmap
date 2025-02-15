@@ -19,5 +19,5 @@ Rails.application.routes.draw do
 
   get '/solarsystem', to: 'solar_system#show'
 
-  resources :route
+  # resources :route
 end
