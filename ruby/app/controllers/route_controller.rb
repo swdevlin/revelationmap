@@ -27,7 +27,7 @@ class RouteController < ApplicationController
   end
 
   def calculate_origin_y(route)
-    route.sector_y * 40 - route.hex_y - 1
+    route.sector_y * 40 - route.hex_y + 1
   end
 
 end

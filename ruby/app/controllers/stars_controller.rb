@@ -1,4 +1,6 @@
 class StarsController < BaseSolarSystemController
+  before_action :set_star, only: %i[update]
+
   def select_fields(query)
     fields = [
       'sector.x AS sector_x',
@@ -19,5 +21,25 @@ class StarsController < BaseSolarSystemController
       'solar_system.stars'
     ]
     query.select(fields.join(", "))
+  end
+
+  def update
+    if @star.update(star_params)
+      render json: @star
+    else
+      render json: { errors: @star.errors.full_messages }, status: :unprocessable_entity
+    end
+  end
+
+  private
+
+  def set_star
+    @star = SolarSystem.find(params[:id])
+  rescue ActiveRecord::RecordNotFound
+    render json: { error: 'Star not found' }, status: :not_found
+  end
+
+  def star_params
+    params.require(:star).permit(:survey_index, :name)
   end
 end

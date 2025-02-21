@@ -13,7 +13,7 @@ Rails.application.routes.draw do
 
   resources :solarsystems, only: [:index], controller: 'solar_systems'
 
-  resources :stars, only: [:index]
+  resources :stars, only: [:index, :update]
 
   get '/systemmap', to: 'system_map#show'
 
