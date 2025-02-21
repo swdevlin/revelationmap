@@ -24,7 +24,7 @@ class RouteController < ApplicationController
   private
 
   def route_params
-    params.expect(route: [:year, :day, :ship_id, :sector_x, :sector_y, :hex_x, :hex_y])
+    params.require(:route).permit(:year, :day, :ship_id, :sector_x, :sector_y, :hex_x, :hex_y)
   end
 
   def calculate_origin_x(route)
