@@ -9,9 +9,6 @@ class RouteController < ApplicationController
                  .map do |route|
       route.as_json.merge(origin_x: calculate_origin_x(route), origin_y: calculate_origin_y(route))
     end
-    # hexes = Route.all.order("year, day, ship_id").map do |route|
-    #
-    # end
     render json: hexes
   end
 
