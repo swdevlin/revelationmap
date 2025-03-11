@@ -18,6 +18,9 @@ class StarsController < BaseSolarSystemController
       'solar_system.terrestrial_planet_count',
       'solar_system.planetoid_belt_count',
       'solar_system.allegiance',
+      'solar_system.native_sophont',
+      'solar_system.extinct_sophont',
+      "(solar_system.main_world->>'techLevel')::INTEGER as tech_level",
       'solar_system.stars'
     ]
     query.select(fields.join(", "))
