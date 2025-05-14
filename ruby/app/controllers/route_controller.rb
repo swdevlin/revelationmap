@@ -15,7 +15,7 @@ class RouteController < ApplicationController
   def create
     @route = Route.create(route_params)
     if @route.save
-      render json: @route, status: :created, location: @route
+      render json: @route, status: :created
     else
       render json: @route.errors, status: :unprocessable_entity
     end
