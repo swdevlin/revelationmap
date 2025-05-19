@@ -15,6 +15,13 @@ class RouteController < ApplicationController
   def create
     @route = Route.create(route_params)
     if @route.save
+      SolarSystem.joins(:sector)
+        .where(x: @route.hex_x, y: @route.hex_y, sector: { x: @route.sector_x, y: @route.sector_y }
+        )
+        .update_all(survey_index: 10)
+
+      updateNeighbourSystems(@route)
+
       render json: @route, status: :created
     else
       render json: @route.errors, status: :unprocessable_entity
@@ -33,6 +40,35 @@ class RouteController < ApplicationController
 
   def calculate_origin_y(route)
     route.sector_y * 40 - route.hex_y + 1
+  end
+
+  def updateNeighbourSystems(route)
+    neighbor_sql = <<~SQL
+      UPDATE solar_system
+      SET survey_index = MAX(5, COALESCE(survey_index, 0))
+      FROM sector
+      WHERE solar_system.sector_id = sector.id
+        AND sector.x = ?
+        AND sector.y = ?
+        AND (
+          (ABS(solar_system.x - ?) = 1 AND solar_system.y = ?)
+          OR
+          (solar_system.x = ? AND ABS(solar_system.y - ?) = 1)
+        )
+    SQL
+
+    ActiveRecord::Base.connection.execute(
+      ActiveRecord::Base.send(:sanitize_sql_array, [
+        neighbor_sql,
+        route.sector_x,
+        route.sector_y,
+        route.hex_x,
+        route.hex_y,
+        route.hex_x,
+        route.hex_y
+      ])
+    )
+
   end
 
 end
