@@ -45,7 +45,7 @@ class RouteController < ApplicationController
   def updateNeighbourSystems(route)
     neighbor_sql = <<~SQL
       UPDATE solar_system
-      SET survey_index = MAX(5, COALESCE(survey_index, 0))
+      SET survey_index = GREATEST(5, COALESCE(survey_index, 0))
       FROM sector
       WHERE solar_system.sector_id = sector.id
         AND sector.x = ?
