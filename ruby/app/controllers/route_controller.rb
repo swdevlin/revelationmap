@@ -54,6 +54,8 @@ class RouteController < ApplicationController
           (ABS(solar_system.x - ?) = 1 AND solar_system.y = ?)
           OR
           (solar_system.x = ? AND ABS(solar_system.y - ?) = 1)
+          OR
+          (ABS(solar_system.x - ?) = 1 AND ABS(solar_system.y - ?) = 1)
         )
     SQL
 
@@ -62,6 +64,8 @@ class RouteController < ApplicationController
         neighbor_sql,
         route.sector_x,
         route.sector_y,
+        route.hex_x,
+        route.hex_y,
         route.hex_x,
         route.hex_y,
         route.hex_x,
